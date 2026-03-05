@@ -38,7 +38,7 @@
       top: -100px; left: 50%;
       transform: translateX(-50%);
       pointer-events: none;
-      animation: pulse 4s ease-in-out infinite;
+      animation: ambientPulse 4s ease-in-out infinite;
     }
     body::after {
       content: '';
@@ -47,10 +47,9 @@
       background: radial-gradient(circle, rgba(249,115,22,0.06) 0%, transparent 70%);
       bottom: -80px; right: 10%;
       pointer-events: none;
-      animation: pulse 5s ease-in-out infinite reverse;
+      animation: ambientPulse 5s ease-in-out infinite reverse;
     }
-
-    @keyframes pulse {
+    @keyframes ambientPulse {
       0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
       50%       { opacity: 1;   transform: translateX(-50%) scale(1.1); }
     }
@@ -59,8 +58,8 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 52px 44px 44px;
-      max-width: 480px;
+      padding: 48px 40px 40px;
+      max-width: 460px;
       width: 92%;
       text-align: center;
       position: relative;
@@ -68,19 +67,18 @@
       box-shadow: 0 0 60px rgba(250,204,21,0.06), 0 20px 60px rgba(0,0,0,0.5);
       animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(32px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
     .icon-wrap {
-      width: 72px; height: 72px;
+      width: 68px; height: 68px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 20px;
+      border-radius: 18px;
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 24px;
-      font-size: 32px;
+      margin: 0 auto 20px;
+      font-size: 30px;
       box-shadow: 0 8px 32px rgba(250,204,21,0.3);
       animation: iconPop 0.5s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
     }
@@ -91,7 +89,7 @@
 
     h1 {
       font-family: 'Syne', sans-serif;
-      font-size: 1.65rem;
+      font-size: 1.55rem;
       font-weight: 800;
       line-height: 1.2;
       margin-bottom: 8px;
@@ -102,60 +100,91 @@
     }
 
     .subtitle {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: var(--muted);
-      margin-bottom: 36px;
+      margin-bottom: 32px;
       line-height: 1.6;
     }
 
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 36px;
-      text-align: left;
-    }
-    .step {
+    /* Progress track — two phases */
+    .progress-track {
       display: flex;
       align-items: center;
-      gap: 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 14px 16px;
-      animation: fadeIn 0.4s both;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 36px;
+      animation: fadeIn 0.4s 0.5s both;
     }
-    .step:nth-child(1) { animation-delay: 0.4s; }
-    .step:nth-child(2) { animation-delay: 0.5s; }
-    .step:nth-child(3) { animation-delay: 0.6s; }
+    .phase {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .phase-dot {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      border: 2px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      transition: all 0.4s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .phase-dot.active {
+      border-color: var(--accent);
+      background: rgba(250,204,21,0.12);
+      box-shadow: 0 0 20px rgba(250,204,21,0.2);
+    }
+    .phase-dot.done {
+      border-color: #22c55e;
+      background: rgba(34,197,94,0.12);
+    }
+    .phase-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: color 0.4s;
+    }
+    .phase-label.active { color: var(--accent); }
+    .phase-label.done   { color: #22c55e; }
+
+    .phase-connector {
+      flex: 1;
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+      margin-bottom: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+    .phase-connector-fill {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 5s linear;
+    }
+    .phase-connector-fill.running { width: 100%; }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateX(-12px); }
-      to   { opacity: 1; transform: translateX(0); }
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    .step-num {
-      width: 30px; height: 30px; flex-shrink: 0;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      border-radius: 8px;
-      font-family: 'Syne', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: #000;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .step-text { font-size: 0.88rem; color: var(--text); line-height: 1.4; }
-    .step-text span { color: var(--muted); font-size: 0.8rem; display: block; margin-top: 2px; }
 
+    /* Timer */
     .timer-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 28px;
     }
     .ring-container {
       position: relative;
-      width: 88px; height: 88px;
+      width: 80px; height: 80px;
     }
     .ring-container svg { transform: rotate(-90deg); }
     .ring-bg   { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 6; }
@@ -164,67 +193,79 @@
       stroke: url(#ringGrad);
       stroke-width: 6;
       stroke-linecap: round;
-      stroke-dasharray: 251.2;
+      stroke-dasharray: 226.2;
       stroke-dashoffset: 0;
       transition: stroke-dashoffset 1s linear;
     }
     .ring-number {
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       display: flex; align-items: center; justify-content: center;
       font-family: 'Syne', sans-serif;
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 800;
       color: var(--accent);
     }
     .timer-label {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--muted);
       letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeIn 0.4s 0.8s both;
+    }
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #000;
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 1rem;
-      padding: 16px 32px;
-      border-radius: 14px;
+      font-size: 0.95rem;
+      padding: 15px 28px;
+      border-radius: 13px;
       border: none;
       cursor: pointer;
       text-decoration: none;
       width: 100%;
       justify-content: center;
-      box-shadow: 0 8px 24px rgba(250,204,21,0.25);
       transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
-      animation: fadeIn 0.4s 0.8s both;
     }
-    .btn:hover  { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(250,204,21,0.35); filter: brightness(1.05); }
-    .btn:active { transform: translateY(0); }
-    .btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #000;
+      box-shadow: 0 8px 24px rgba(250,204,21,0.25);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(250,204,21,0.35); filter: brightness(1.05); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.08); transform: translateY(-1px); }
+    .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
 
     .note {
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       color: var(--muted);
-      margin-top: 16px;
+      margin-top: 14px;
       animation: fadeIn 0.4s 1s both;
     }
 
+    /* Toast */
     .toast {
       position: fixed;
-      bottom: 28px;
-      left: 50%;
+      bottom: 28px; left: 50%;
       transform: translateX(-50%) translateY(80px);
       background: #1e2a3a;
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 12px 20px;
-      font-size: 0.85rem;
+      padding: 11px 20px;
+      font-size: 0.84rem;
       color: var(--accent);
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       white-space: nowrap;
@@ -238,104 +279,171 @@
 <div class="card">
   <div class="icon-wrap">💻</div>
   <h1>Sodepur Laptop &amp;<br/>Computer Service</h1>
-  <p class="subtitle">Your feedback helps us grow! You'll be taken directly to our Google Review page.</p>
+  <p class="subtitle">We'll show you our location first, then take you straight to leave a review!</p>
 
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-text">Locating our Google Business Profile<span>Using verified Place ID</span></div>
+  <!-- Two-phase progress -->
+  <div class="progress-track">
+    <div class="phase">
+      <div class="phase-dot active" id="dot1">📍</div>
+      <div class="phase-label active" id="lbl1">Directions</div>
     </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-text">Opening the Write a Review panel<span>Direct link — no extra clicks needed</span></div>
+    <div class="phase-connector">
+      <div class="phase-connector-fill" id="connFill"></div>
     </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-text">Rate us ⭐⭐⭐⭐⭐ &amp; share your experience<span>Takes less than 60 seconds</span></div>
+    <div class="phase">
+      <div class="phase-dot" id="dot2">⭐</div>
+      <div class="phase-label" id="lbl2">Review</div>
     </div>
   </div>
 
   <div class="timer-wrap">
     <div class="ring-container">
-      <svg width="88" height="88" viewBox="0 0 88 88">
+      <svg width="80" height="80" viewBox="0 0 80 80">
         <defs>
           <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%"   stop-color="#facc15"/>
             <stop offset="100%" stop-color="#f97316"/>
           </linearGradient>
         </defs>
-        <circle class="ring-bg"   cx="44" cy="44" r="40"/>
-        <circle class="ring-fill" id="ringFill" cx="44" cy="44" r="40"/>
+        <circle class="ring-bg"   cx="40" cy="40" r="36"/>
+        <circle class="ring-fill" id="ringFill" cx="40" cy="40" r="36"/>
       </svg>
       <div class="ring-number" id="countdown">5</div>
     </div>
-    <div class="timer-label" id="timerLabel">Redirecting in 5 seconds…</div>
+    <div class="timer-label" id="timerLabel">Opening directions…</div>
   </div>
 
-  <a class="btn" href="#" onclick="doRedirect(); return false;">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-    </svg>
-    Write a Review Now
-  </a>
+  <div class="btn-group">
+    <a class="btn btn-primary" href="#" onclick="skipToReview(); return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+      </svg>
+      Write a Review Now
+    </a>
+    <a class="btn btn-secondary" href="#" onclick="openDirections(); return false;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+      Open Directions Only
+    </a>
+  </div>
   <p class="note">🔒 Opens Google securely — sign in with your Google account to leave a review.</p>
 </div>
 
-<div class="toast" id="toast">⭐ Opening your review page…</div>
+<div class="toast" id="toast">📍 Opening directions…</div>
 
 <script>
-  // ── CONFIG ────────────────────────────────────────────────
-  const PLACE_ID   = "ChIJPf1xJBid-DkRMPOQf0J2alI";
-  const DELAY_SECS = 5;
-  // Direct write-review deep link
-  const REVIEW_URL = "https://search.google.com/local/writereview?placeid=" + PLACE_ID;
-  // ─────────────────────────────────────────────────────────
+  // ── CONFIG ────────────────────────────────────────
+  const DIRECTIONS_URL = "https://www.google.com/maps/search/Sodepur+Laptop+%26+Computer+Service/@22.7038882,88.368687,14z?entry=s&sa=X&ved=1t%3A199789";
+  const REVIEW_URL     = "https://search.google.com/local/writereview?placeid=ChIJPf1xJBid-DkRMPOQf0J2alI";
+  const DELAY_SECS     = 5;
+  // ─────────────────────────────────────────────────
 
-  const circumference = 2 * Math.PI * 40;
+  const circumference = 2 * Math.PI * 36; // 226.2
   const ring    = document.getElementById('ringFill');
   const countEl = document.getElementById('countdown');
   const labelEl = document.getElementById('timerLabel');
   const toast   = document.getElementById('toast');
+  const dot1    = document.getElementById('dot1');
+  const dot2    = document.getElementById('dot2');
+  const lbl1    = document.getElementById('lbl1');
+  const lbl2    = document.getElementById('lbl2');
+  const conn    = document.getElementById('connFill');
 
   ring.style.strokeDasharray  = circumference;
   ring.style.strokeDashoffset = 0;
 
-  let remaining   = DELAY_SECS;
-  let redirectDone = false;
+  let remaining    = DELAY_SECS;
+  let phase        = 1; // 1 = directions, 2 = review
+  let done         = false;
 
-  function updateRing(s) {
-    ring.style.strokeDashoffset = circumference * (1 - s / DELAY_SECS);
+  function updateRing(s, total) {
+    ring.style.strokeDashoffset = circumference * (1 - s / total);
   }
 
   function showToast(msg) {
     toast.textContent = msg;
     toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3500);
+    setTimeout(() => toast.classList.remove('show'), 3000);
   }
 
-  function doRedirect() {
-    if (redirectDone) return;
-    redirectDone = true;
-    clearInterval(ticker);
+  function openDirections() {
+    window.open(DIRECTIONS_URL, '_blank');
+  }
 
-    countEl.textContent = '✓';
-    labelEl.textContent = 'Opening now!';
-    ring.style.strokeDashoffset = circumference;
-
-    showToast('⭐ Opening Google Reviews…');
+  function openReview() {
     window.open(REVIEW_URL, '_blank');
   }
 
-  updateRing(DELAY_SECS);
+  function skipToReview() {
+    done = true;
+    clearInterval(ticker);
+    countEl.textContent = '✓';
+    labelEl.textContent = 'Opening review…';
+    ring.style.strokeDashoffset = circumference;
+    showToast('⭐ Opening Google Reviews…');
+    openReview();
+  }
+
+  function switchToReviewPhase() {
+    // Update UI to phase 2
+    dot1.classList.remove('active');
+    dot1.classList.add('done');
+    dot1.textContent = '✓';
+    lbl1.classList.remove('active');
+    lbl1.classList.add('done');
+
+    dot2.classList.add('active');
+    lbl2.classList.add('active');
+
+    // Reset timer for review phase
+    phase      = 2;
+    remaining  = DELAY_SECS;
+    countEl.textContent = remaining;
+    labelEl.textContent = `Opening review in ${remaining}s…`;
+    updateRing(remaining, DELAY_SECS);
+  }
+
+  // Phase 1: open directions immediately, then count down to review
+  updateRing(DELAY_SECS, DELAY_SECS);
+  openDirections();
+  showToast('📍 Directions opened!');
+
+  // Start connector fill animation
+  setTimeout(() => conn.classList.add('running'), 100);
 
   const ticker = setInterval(() => {
+    if (done) return;
     remaining--;
-    countEl.textContent = remaining;
-    updateRing(remaining);
-    labelEl.textContent = remaining > 0
-      ? `Redirecting in ${remaining} second${remaining !== 1 ? 's' : ''}…`
-      : 'Redirecting now!';
-    if (remaining <= 0) doRedirect();
+    countEl.textContent = remaining > 0 ? remaining : '✓';
+    updateRing(Math.max(remaining, 0), DELAY_SECS);
+
+    if (phase === 1) {
+      labelEl.textContent = remaining > 0
+        ? `Opening review in ${remaining}s…`
+        : 'Opening review now!';
+      if (remaining <= 0) {
+        switchToReviewPhase();
+        openReview();
+        showToast('⭐ Review page opened!');
+      }
+    } else {
+      labelEl.textContent = remaining > 0
+        ? `Review opens in ${remaining}s…`
+        : 'Done!';
+      if (remaining <= 0) {
+        done = true;
+        clearInterval(ticker);
+        dot2.classList.remove('active');
+        dot2.classList.add('done');
+        dot2.textContent = '✓';
+        lbl2.classList.remove('active');
+        lbl2.classList.add('done');
+        labelEl.textContent = 'All done! 🎉';
+        countEl.textContent = '🎉';
+      }
+    }
   }, 1000);
 </script>
 </body>
